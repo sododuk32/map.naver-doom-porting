@@ -40,26 +40,44 @@
                     container.style.width = '1920px';
                     container.style.height = '1200px';
                     container.style.border = '2px solid red';
-                     container.style.paddingTop = '100px';
+                    container.style.paddingTop = '100px';
                     container.id = 'dosbox-container';
 
                     console.log(`Container size: ${container.style.width} x ${container.style.height}`);
 
                     canvasElement.parentNode.replaceChild(container, canvasElement);
+                     document.body.querySelectorAll('*').forEach(function (element) {
+                        if (element !== container) {
+                            element.style.pointerEvents = 'none'; // Disable pointer events for all other elements
+                        }
+                    });
 
+                    // Enable pointer events for the container
+                    container.style.pointerEvents = 'auto';
+
+                    const elementToRemove = document.querySelector('.sc-wli0gr.ghtjtd');
+
+                    // 요소가 존재하면 삭제
+                    if (elementToRemove) {
+                        elementToRemove.remove();
+                    }
 
                     try {
                         const dosbox = new Dosbox({
                             id: 'dosbox-container',
                             onload: (dosbox) => {
                                 console.log('Dosbox initialized successfully');
-                                try {
-                                    console.log('Attempting to run DOOM...');
-                                    dosbox.run('https://js-dos.com/cdn/upload/DOOM-@evilution.zip', './doom');
 
-                                    console.log('DOOM run command executed');
+                                // Step 1: Run commands
+                                try {
+                                    dosbox.run('https://js-dos.com/cdn/upload/DOOM-@evilution.zip', './', [
+                                        "-c", "mount c ./DOOM/",
+                                        "-c", "c:",
+                                        "-c", "dir",
+                                        "-c", "DOOM.EXE"
+                                    ]);
                                 } catch (error) {
-                                    console.error('Error running DOOM:', error);
+                                    console.error("Error running commands:", error);
                                 }
                             },
                             onrun: (dosbox, app) => {
