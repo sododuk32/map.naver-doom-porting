@@ -11,6 +11,7 @@
 // @require      https://js-dos.com/cdn/js-dos-api.js
 // ==/UserScript==
 
+// using Tampermonkey
 (function () {
     'use strict';
 
